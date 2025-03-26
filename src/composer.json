@@ -1,0 +1,27 @@
+{
+    "name": "codediesel/ticourl",
+    "require": {
+        "symfony/console": "^7.2",
+        "web-token/jwt-framework": "@stable",
+        "symfony/serializer": "^7.2",
+        "symfony/yaml": "^7.2",
+        "twig/twig": "^3.20",
+        "symfony/dotenv": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Codediesel\\Controller\\": "Controller/",
+            "Codediesel\\Library\\": "Library/",
+            "Codediesel\\Model\\": "Model/",
+            "Codediesel\\Pages\\": "Pages/",
+            "Codediesel\\RestApi\\": "RestApi/",
+            "Codediesel\\Exception\\": "Exception/"
+        }
+    },
+    "authors": [
+        {
+            "name": "codediesel",
+            "email": "rodrigomanara@yahoo.co.uk"
+        }
+    ]
+}

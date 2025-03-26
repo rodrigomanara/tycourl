@@ -1,0 +1,19 @@
+{% extends "template.html.twig" %}
+{% block loginUrl %}
+{% endblock loginUrl %}
+{%  block body %}
+        <p>Enter a URL to shorten it:</p>
+        <input type="url" id="longUrl" placeholder="Enter your URL here" required>
+        <br>
+        <button id="generate">Generate Short URL</button>
+        <div class="result" id="result" style="display:none;">
+            <p>Shortened URL: <a id="shortUrl" href="" target="_blank"></a></p>
+        </div>
+        <div class="result" id="error"> </div>
+{%  endblock %}
+{% block script %}
+        <script type="module" >
+                import global from "./javascript/globals";
+                global.generateShortUrl('[id=generate]');
+        </script>
+{% endblock %}

@@ -1,0 +1,45 @@
+RewriteEngine On
+
+# Ensure the requested file or directory doesn't exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/styles/
+RewriteCond %{REQUEST_URI} !^/javascript/
+RewriteCond %{REQUEST_URI} !^/node_modules/
+
+# Rewrite all requests to index.php while preserving the path
+RewriteRule ^([^/]+)$ index.php?page=$1 [L,QSA]
+# Match three segments: /rest/api/{module}/{action}/{id}
+RewriteRule ^rest/api/([^/]+)/([^/]+)/([^/]+)$ restApi.php?module=$1&action=$2&id=$3 [L,QSA]
+# Match two segments: /rest/api/{module}/{id}
+RewriteRule ^rest/api/([^/]+)/([^/]+)$ restApi.php?module=$1&action=$2 [L,QSA]
+# Match one segment: /rest/api/{api}
+RewriteRule ^rest/api/([^/]+)$ restApi.php?api=$1 [L,QSA]
+
+
+# Redirect everything to index.php while preserving query strings
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
+
+# Enable GZIP Compression for specific file types
+<IfModule mod_deflate.c>
+    # Compress text, HTML, JavaScript, CSS, and XML
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/atom+xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# Optionally, disable compression for older browsers (e.g., Internet Explorer)
+<IfModule mod_headers.c>
+    Header set Vary "Accept-Encoding"
+</IfModule>
+
