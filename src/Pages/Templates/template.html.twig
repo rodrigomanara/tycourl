@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ TicoUrl }} - {{ title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/javascript/utils.js"></script>
+    <script src="/javascript/user.js"></script>
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-white">
+<!-- Alert Container -->
+<div id="alertContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+{% block navigation %}
+    {% include 'navigation.twig' %}
+{% endblock navigation %}
+{% block content %}{% endblock content %}
+{% block scripts %} {% endblock %}
+</body>
+</html>

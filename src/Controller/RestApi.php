@@ -1,10 +1,14 @@
 <?php
 
 namespace Codediesel\Controller;
- 
-use Codediesel\Library\DataWithHeaderFormatting as DataFormatting; 
+
+use Codediesel\Library\DataWithHeaderFormatting as DataFormatting;
 use Codediesel\Library\Api\Middleware;
 use Codediesel\Exception\AuthenticationException;
+use Codediesel\Exception\DataNotFoundException;
+use Codediesel\Exception\ArgumentMissingException;
+use Codediesel\Exception\DatabaseErrorException;
+use Codediesel\Exception\UnanthoriseMethodException;
 
 class RestApi
 {
@@ -23,7 +27,7 @@ class RestApi
         $this->route = $route;
         $this->urls = include __ROOT__ . DIRECTORY_SEPARATOR . "Config/restApi.php";
     }
-    
+
     /**
      * Initialize the RestApi
      *
@@ -43,8 +47,6 @@ class RestApi
         } catch (\Throwable|\Exception $e) {
             $dataFormatting->error([
                 'message' => $e->getMessage(),
-                'path' => $e->getFile(),
-                'line code' => $e->getLine(),
             ]);
         }
         $dataFormatting->notFound(["error" => "Not found"]);
@@ -64,28 +66,38 @@ class RestApi
      */
     private function pathRunner(array $request, DataFormatting $dataFormatting): void
     {
-        $path = $this->path($request);
 
-        try{
+        try {
+
+            $path = $this->path($request);
             foreach ($this->urls as $key => $value) {
                 if (strpos($key, '{') !== false) {
                     // Replace placeholder {id} with the actual ID from the request
                     $compare = str_replace('{id}', $request['id'] ?? '', $key);
 
-                    $this->route->set('id' , $request['id'] ?? null);
-                    if ($compare === $path) { 
+                    $this->route->set('id', $request['id'] ?? null);
+                    if ($compare === $path) {
                         $this->execute($value, $dataFormatting);
                         return;
                     }
                 } elseif ($key === $path) {
-                    $this->execute($value ,  $dataFormatting);
+                    $this->execute($value, $dataFormatting);
                     return;
                 }
             }
-        }catch(AuthenticationException $e){
+        } catch (AuthenticationException $e) {
             $dataFormatting->notAuthorized(["error" => $e->getMessage()]);
+        } catch (DataNotFoundException|ArgumentMissingException $e) {
+            $dataFormatting->notData(["error" => $e->getMessage()]);
+        } catch (DatabaseErrorException $e) {
+            $dataFormatting->error(["error" => $e->getMessage()]);
+        } catch (UnanthoriseMethodException $e) {
+            $dataFormatting->notMethod(["error" => $e->getMessage()]);
+        } catch (\Throwable|\Exception $e) {
+            $dataFormatting->error([
+                'message' => $e->getMessage(),
+            ]);
         }
-
         // If no matching path is found, return a "Not found" error
         $dataFormatting->notFound(["error" => "Not found"]);
     }
@@ -102,29 +114,31 @@ class RestApi
      * @param DataFormatting $dataFormatting
      * @return void
      */
-    private function execute(array $options , DataFormatting $dataFormatting): void
-    { 
+    private function execute(array $options, DataFormatting $dataFormatting): void
+    {
+        // Extract the class, action, and middleware from the options
         $class = $options['class'];
         $action = $options['action'] ?? null;
         $middleware = $options['middleware'] ?? null;
+        $function = $options['function'] ?? null;
 
         if ($class && class_exists($class)) {
+            $instanciate = new $class($this->route);
+            if ($middleware) {
+                $middleware = new Middleware($options);
 
-            $instanciate = new $class();
-            if($middleware){
-                $middleware = new Middleware($action);
- 
-                if(!$middleware->isAuthorise()){
-                    $dataFormatting->notAuthorized(["error" => "Not authorised"]);
-                }
-                $role = $options['role'] ?? 'user';
-                if(!$middleware->isUserAllowed($instanciate , $role)){
-                    $dataFormatting->notAuthorized(["error" => "Not authorised"]);
-                }
+                // Check if the user is authenticated and authorized     
+                if (!$middleware->isAuthenticate())
+                    $dataFormatting->notAuthorized(["error" => "Not Authenticated"]);
+
+                if (!$middleware->isUserAllowed($instanciate))
+                    $dataFormatting->failedToLogin(["error" => "User Not authorised"]);
+
             }
-            $data = $instanciate->initialize($action ?? 'create', $this->route);
+
+            $data = $instanciate->initialize($function, $options);
             $dataFormatting->success($data); // Return success response
-   
+
         } else {
             $dataFormatting->error(["error" => "Invalid class or action"]);
         }
@@ -142,6 +156,7 @@ class RestApi
      */
     private function path(array $request): string
     {
+
         // Determine the path based on the request parameters
         if (isset($request['module'], $request['action'], $request['id'])) {
             return sprintf("/%s/%s/%s", $request['module'], $request['action'], $request['id']);

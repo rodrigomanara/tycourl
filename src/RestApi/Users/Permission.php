@@ -5,11 +5,11 @@ namespace Codediesel\RestApi\Users;
 class Permission
 {
 
-    CONST CREATE = 'create';
-    CONST DELETE = 'delete';
-    CONST UPDATE = 'update';
-    CONST RETRIEVE = 'retrieve';
-    CONST ALL = 'all';
+    CONST string CREATE = 'create';
+    CONST string DELETE = 'delete';
+    CONST string UPDATE = 'update';
+    CONST string RETRIEVE = 'retrieve';
+    CONST string ALL = 'all';
     
     /**
      * @return array
@@ -36,7 +36,7 @@ class Permission
      * @return bool
      */
 
-    public static function check(string $role, string $action) : bool
+    public static function isAllowed(string $role, string $action) : bool
     {
         $permission = new static();
         $allowed = $permission->userNotLoggedCan();

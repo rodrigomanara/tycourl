@@ -1,0 +1,39 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs/
+*.log
+*.log.*
+
+#vendor
+vendor/
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+
+# Docker
+docker-compose.override.yml
+*.pid
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+
+
+# Ignore all files in the cache directory
+src/Cache/*
+src/keys/*

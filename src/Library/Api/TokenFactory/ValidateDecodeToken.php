@@ -24,12 +24,13 @@ class ValidateDecodeToken
     {
         try {
             $builder = new Builder();
-
             $jwsVerifier = $builder->verifier();
-
-            if (!$jwsVerifier->verifyWithKey($this->unserialize(), (new PrivateKeyFetcher())->signature(), 0)) {
+            if (!$jwsVerifier->verifyWithKey($this->unserialize(),
+                (new PrivateKeyFetcher())->signature(), 0))
+            {
                 throw new \Exception('Invalid signature');
             }
+ 
             $clock = new Clock();
             $checkerManager = new ClaimCheckerManager([new ExpirationTimeChecker($clock)]);
             $checkerManager->check($this->getPayload());

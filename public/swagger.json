@@ -1,0 +1,530 @@
+{
+    "openapi": "3.0.0",
+    "servers": [
+        {
+            "url": "http:\/\/192.168.1.100\/rest\/api\/"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization\n                Bearer {token}\""
+            }
+        }
+    },
+    "info": {
+        "title": "API Documentation TicoUrl",
+        "version": "1.0.0",
+        "description": "API documentation for TicoUrl",
+        "contact": {
+            "name": "TicoUrl Team",
+            "email": "info@ticourl.com",
+            "license": {
+                "name": "MIT",
+                "url": "https:\/\/opensource.org\/licenses\/MIT"
+            }
+        }
+    },
+    "paths": {
+        "\/authenticate\/login": {
+            "post": {
+                "summary": "create",
+                "operationId": "create",
+                "tags": [
+                    "Authenticate"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "username"
+                    },
+                    {
+                        "in": "query",
+                        "name": "password",
+                        "schema": {
+                            "type": "password"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "\/authenticate\/validate": {
+            "post": {
+                "summary": "retrieve",
+                "operationId": "retrieve",
+                "tags": [
+                    "Authenticate"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "\/authenticate\/refresh\/token": {
+            "put": {
+                "summary": "update",
+                "operationId": "update",
+                "tags": [
+                    "Authenticate"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "\/hash\/create": {
+            "post": {
+                "summary": "create",
+                "operationId": "create",
+                "tags": [
+                    "Hash"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "url"
+                    },
+                    {
+                        "in": "query",
+                        "name": "type",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "short",
+                                "long"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "\/hash\/retrieve": {
+            "post": {
+                "summary": "retrieve",
+                "operationId": "retrieve",
+                "tags": [
+                    "Hash"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "hash"
+                    },
+                    {
+                        "in": "query",
+                        "name": "type",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "short",
+                                "long"
+                            ]
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "user_id",
+                        "schema": {
+                            "type": "int"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "\/hash\/delete": {
+            "delete": {
+                "summary": "delete",
+                "operationId": "delete",
+                "tags": [
+                    "Hash"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "hash"
+                    },
+                    {
+                        "in": "query",
+                        "name": "user_id",
+                        "schema": {
+                            "type": "int"
+                        }
+                    }
+                ],
+                "responses": [],
+                "description": "Requires Authentication"
+            }
+        },
+        "\/hash\/update": {
+            "put": {
+                "summary": "update",
+                "operationId": "update",
+                "tags": [
+                    "Hash"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "hash"
+                    },
+                    {
+                        "in": "query",
+                        "name": "type",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "short",
+                                "long"
+                            ]
+                        }
+                    }
+                ],
+                "responses": [],
+                "description": "Requires Authentication"
+            }
+        },
+        "\/hash\/history": {
+            "get": {
+                "summary": "history",
+                "operationId": "retrieve",
+                "tags": [
+                    "Hash"
+                ],
+                "parameters": {
+                    "hash": "string",
+                    "type": "string",
+                    "user_id": "int"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "description": "Requires Authentication"
+            }
+        },
+        "\/users\/create": {
+            "post": {
+                "summary": "create",
+                "operationId": "create",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": {
+                    "username": "string",
+                    "email": "string",
+                    "password": "string",
+                    "first_name": "string",
+                    "last_name": "string",
+                    "role": "string"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "\/users\/retrieve\/{id}": {
+            "get": {
+                "summary": "retrieve",
+                "operationId": "retrieve",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": {
+                    "id": "int"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "description": "Requires Authentication"
+            }
+        },
+        "\/users\/delete": {
+            "delete": {
+                "summary": "delete",
+                "operationId": "delete",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": {
+                    "id": "int"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "description": "Roles: self, admin"
+            }
+        },
+        "\/users\/update": {
+            "put": {
+                "summary": "update",
+                "operationId": "update",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": {
+                    "id": "int",
+                    "username": "string",
+                    "email": "string",
+                    "password": "string",
+                    "first_name": "string",
+                    "last_name": "string",
+                    "role": "string"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "description": "Roles: self, admin"
+            }
+        },
+        "\/users\/history": {
+            "get": {
+                "summary": "history",
+                "operationId": "history",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "description": "Requires Authentication"
+            }
+        },
+        "\/analytics\/retrieve": {
+            "get": {
+                "summary": "retrieve",
+                "operationId": "retrieve",
+                "tags": [
+                    "Analytics"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "limit"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "description": "Requires Authentication"
+            }
+        }
+    }
+}

@@ -2,6 +2,8 @@
 
 namespace Codediesel\RestApi\Users;
 
+use Codediesel\Type\RoleType;
+
 enum PermissionType
 {
 
@@ -23,19 +25,19 @@ enum PermissionType
      * @return array
      */
     private function user(){
-        return new Permission()->userLoggedCan();
+        return (new Permission())->userLoggedCan() ;
     }
 
     /**
      * @return array
      */
     private function admin(){
-        return new Permission()->adminCan();
+        return (new Permission())->adminCan();
     }
     /**
      * 
      */
     private function anonymous(){
-            return new Permission()->userNotLoggedCan();
+            return (new Permission())->userNotLoggedCan();
     }
 }

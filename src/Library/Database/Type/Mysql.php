@@ -34,7 +34,7 @@ class Mysql extends AbstractDatabase implements InterfaceDatabase
         try {
 
             $sql = <<<SQL
-insert into $table_name (%s) values (%s);
+insert into {$table_name} (%s) values (%s);
 SQL;
 
             $this->prepare($sql, $args);
@@ -65,10 +65,10 @@ SQL;
 
 
             $sql = <<<SQL
-update $table_name set %s where %s;
+update {$table_name} set %s where %s;
 SQL;
 
-            $this->prepare($sql, $args);
+            $this->prepareWhere($sql, $args , $where);
             if ($this->isAdded()) {
 
                 return $this->retrieve($table_name, $where);
@@ -102,25 +102,63 @@ SQL;
         }
     }
 
-    /** @howtouse used to Retrieve All records
+    /**
      * @param string $table_name
      * @param array $where
+     * @param int $limit
+     * @param int $offset
      * @return array
      */
-    public function retrieveRecords(string $table_name, array $where): array
+    public function retrieveRecords(string $table_name, array $where, int $limit, int $offset , array $options = []): array
     {
         try {
             $sql = <<<SQL
-select * from  $table_name %s;
+select * from  $table_name %s limit $offset,$limit;   
 SQL;
-
-            $prepare = $this->prepare($sql, $where, true);
+            $prepare = $this->prepare($sql, $where, true , $options);
             return $prepare->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
             return [
                 'error' => $e->getMessage()
             ];
-        } catch (\Throwable $e) {
+        }
+    }
+
+    /**
+     * @param string $table_name
+     * @param array $where
+     * @return bool
+     */
+    public function delete(string $table_name, array $where): bool
+    {
+        try {
+            $sql = <<<SQL
+delete from $table_name %s;
+SQL;
+
+            $this->executeQuery($sql, $where); 
+
+            return $this->isAdded();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConnected(): bool
+    {
+        return $this->conn !== null;
+    }
+
+    public function rawSql(string $sql, array $args = []): mixed
+    {
+        try {
+            $prepare = $this->conn->prepare($sql);
+            $prepare->execute($args);
+            return $prepare->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
             return [
                 'error' => $e->getMessage()
             ];

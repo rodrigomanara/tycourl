@@ -3,33 +3,19 @@
 namespace Codediesel\Library;
 
 use Codediesel\Controller\Route;
+use PharIo\GnuPG\Exception;
 
 class Pages
 {
-    public Route $route;
     private array $pages;
     private array $request;
 
     /**
-     * Constructor
-     *
-     * Initializes the Pages class with the given Route instance.
-     * It also sets up the request data and the list of available pages.
-     *
      * @param Route $route
      */
-    public function __construct(Route $route)
+    public function __construct(private readonly Route $route)
     {
-        $this->route = $route;
         $this->request = $this->route->request();
-        $this->pages = [
-            \Codediesel\Pages\Hash\Hash::class,
-            \Codediesel\Pages\Home\Home::class,
-            \Codediesel\Pages\Login\Login::class,
-            \Codediesel\Pages\Register\Register::class,
-            //            \Codediesel\Pages\Dash::class,
-            \Codediesel\Pages\Error\Error::class,
-        ];
     }
 
     /**
@@ -39,16 +25,62 @@ class Pages
      * and invoking its init method. It handles any exceptions that may occur.
      *
      * @return void
+     * @throws Exception
      */
     public function init(): void
     {
-        try {
-            $current = $this->find();
-            $class = new $current();
-            $class?->init();
-        } catch (\Throwable|\Exception $e) {
-            dd($e->getMessage(), $e->getLine());
+        foreach ($this->getPages() as $uri => $class) {
+            if ($this->runPage($uri, $class))
+                return;
         }
+
+        //ensure run the check as well
+        throw new Exception("Page Not Found");
+    }
+
+    /**
+     * @param string $uri
+     * @param string $class
+     * @return void
+     * @throws Exception
+     */
+    private function runPage(string $uri, string $class): bool
+    {
+
+        //check if uri is patten
+        if (str_contains($uri, '|')) {
+            $uris = explode('|', $uri);
+            foreach ($uris as $string) {
+                if ($this->route->isMatch($string) && class_exists($class)) {
+                    $execute = new $class($this->request);
+                    $execute->init();
+                    return true;
+                }
+            }
+        }
+
+        if ($this->route->isMatch($uri)) {
+            $execute = new $class($this->request);
+            $execute->init();
+            return true;
+        }
+        try {
+            //replace
+            if (!(str_contains($uri, '{id}') or str_contains($uri, '{hashed}'))) return false;
+            $page = $this->route->get('id') ?? $this->route->get('page');
+            if (!$page) return false;
+
+            $url = preg_replace('/{hashed}|{id}/', $page, $uri);
+            if (!$this->route->isMatch($url)) return false;
+
+            $execute = new $class($this->request);
+            $execute->init();
+
+        } catch (\Throwable $e) {
+            return false;
+        }
+
+        return false;
     }
 
     /**
@@ -61,15 +93,7 @@ class Pages
      */
     private function find(): mixed
     {
-        if (isset($this->request['page'])) {
-            $current = $this->grep($this->request['page']);
-            if ($current === false) {
-                $current = $this->grep('hash');
-            }
-            return $current;
-        } else {
-            return $this->grep('home');
-        }
+        return '';
     }
 
     /**
@@ -85,5 +109,23 @@ class Pages
     {
         $array = (preg_grep("/$page/i", $this->pages));
         return current($array);
+    }
+
+    /**
+     * @param array $page
+     * @return void
+     */
+    public function setPage(string $url, string $class): self
+    {
+        $this->pages[$url] = $class;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPages(): array
+    {
+        return $this->pages;
     }
 }

@@ -10,77 +10,36 @@ use Codediesel\Controller\Route;
  */
 abstract class RestApiAbstract implements RestApiInterface
 {
-    /**
-     * @var string $method The HTTP method of the current request.
-     */
-    private string $method;
 
-    /**
-     * Constructor to initialize the HTTP method from the server request.
-     */
-    public function __construct()
+    protected Route $route;
+
+    public function __construct(Route $route)
     {
-        $this->method = $_SERVER['REQUEST_METHOD'];
+        $this->route = $route;
     }
 
-    /**
-     * Checks if the HTTP method is POST.
-     *
-     * @return bool True if the method is POST, otherwise false.
-     */
-    protected function isPost(): bool
-    {
-        return $this->method === 'POST';
-    }
 
     /**
-     * Checks if the HTTP method is GET.
+     * Initializes the API operation based on the provided function and route.
      *
-     * @return bool True if the method is GET, otherwise false.
-     */
-    protected function isGet(): bool
-    {
-        return $this->method === 'GET';
-    }
-
-    /**
-     * Checks if the HTTP method is PUT.
-     *
-     * @return bool True if the method is PUT, otherwise false.
-     */
-    protected function isPut(): bool
-    {
-        return $this->method === 'PUT';
-    }
-
-    /**
-     * Checks if the HTTP method is DELETE.
-     *
-     * @return bool True if the method is DELETE, otherwise false.
-     */
-    protected function isDelete(): bool
-    {
-        return $this->method === 'DELETE';
-    }
-
-    /**
-     * Initializes the API operation based on the provided type and route.
-     *
-     * @param string $type The type of operation (e.g., create, update, delete, retrieve).
-     * @param Route $route The route object containing request data.
+     * @param string $function The function to be executed (e.g., create, update, delete).
+     * @param array $options Additional options for the operation.
      * @return array The result of the operation.
      */
-    public function initialize(string $type, Route $route): array
+    public function initialize(string $function, array $options): array
     {
-        return match ($type) {
-            'create' => $this->create($route->post()),
-            'update' => $this->update($route->post()),
-            'delete' => $this->delete($route->getAll()),
-            'retrieve' => $this->retrieve($route->getAll()),
-            default => []
-        };
+
+        // Check if the method is valid
+        (new MethodValidator())->methodValidator($options['method']);
+
+        // Check if the method is allowed for the given function
+        if (is_callable([$this, $function])) {
+            return $this->{$function}($this->route->getAll());
+        } else {
+            throw new \Exception("Method not allowed");
+        }
     }
-    
+
     /**
      * Checks if the user is authorized based on their role.
      *

@@ -1,16 +1,22 @@
 <?php
 
+session_start();
 require_once '../src/app.php';
 
+
+use Codediesel\Library\DataWithHeaderFormatting as DataFormatting;
 
 $route = new \Codediesel\Controller\Route();
 $main = new \Codediesel\Controller\RestApi($route);
 try {
     $main->init();
-} catch (\Twig\Error\LoaderError $e) {
-    dump($e->getMessage());
-} catch (\Twig\Error\RuntimeError $e) {
-    dump($e->getMessage());
-} catch (\Twig\Error\SyntaxError $e) {
-    dump($e->getMessage());
+}catch (\Exception | Throwable $e){
+    $dataFormatting = new DataFormatting();
+    $dataFormatting->error([
+        'error' => 'Contact Site Administrator',
+        'message' => $e->getMessage(),
+        'line' => $e->getLine(),
+        'file' => $e->getFile(),
+    ]);
+    exit(1);
 }

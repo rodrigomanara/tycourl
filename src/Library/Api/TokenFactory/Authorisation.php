@@ -7,16 +7,7 @@ use Codediesel\RestApi\Users\Permission;
 
 class Authorisation extends Authenticate
 {
-    /**
-     * @param string $type
-     * @return bool
-     */
-    private function actionChecker(string $type)
-    {
-        $data = $this->parsedToken();
-        return $data['action'] == $type;
-
-    }
+    
 
     /**
      * @param string $type
@@ -28,25 +19,27 @@ class Authorisation extends Authenticate
         return $data['role'] == $type && $data['role'] == 'admin';
 
     }
-
-
-    public function isAllowed(string $role) : bool
+    /** 
+     * @param string $action
+     * @return bool
+     */
+    public function isAllowed(string $action) : bool
     {
+
         $data = $this->parsedToken();
-        if($this->isAdmin($role))
+        if($this->isAdmin($data['role']))
             return true;
 
-       $userData  = new Users();
+        $userData  = new Users();
+        //check if user exists
         $user = $userData->fetchUser([
             'id' => $data['user_id']
         ]);
 
         if(!$user)
-            return false;
+            return false;      
 
-        
-        //check if user has the correct permission to perform the operation
-        return Permission::check($user['role'], $role);        
+        return Permission::isAllowed($user['role'], $action);
 
     }
 

@@ -15,7 +15,11 @@ class Authenticate
      */
     public function __construct()
     {
-        $this->headers = getallheaders();  
+        $this->headers = getallheaders();   
+        if(is_null($this->getToken()))
+        {
+            throw new \Exception('Token not found');
+        }
         $this->validateToken = new ValidateDecodeToken($this->getToken());
     }
     /**
@@ -23,6 +27,9 @@ class Authenticate
      */
     private function getToken(): ?string
     {
+        if(!isset($this->headers['Authorization'])) {
+            return null;
+        }
        return str_replace('Bearer ', '', $this->headers['Authorization']);
     }
 

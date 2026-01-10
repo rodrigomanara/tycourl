@@ -1,25 +1,26 @@
 RewriteEngine On
 
 # Ensure the requested file or directory doesn't exist
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/styles/
-RewriteCond %{REQUEST_URI} !^/javascript/
-RewriteCond %{REQUEST_URI} !^/node_modules/
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
 
-# Rewrite all requests to index.php while preserving the path
-RewriteRule ^([^/]+)$ index.php?page=$1 [L,QSA]
+RewriteRule ^(styles|javascript|dist|images)/ - [L]
+
 # Match three segments: /rest/api/{module}/{action}/{id}
 RewriteRule ^rest/api/([^/]+)/([^/]+)/([^/]+)$ restApi.php?module=$1&action=$2&id=$3 [L,QSA]
-# Match two segments: /rest/api/{module}/{id}
 RewriteRule ^rest/api/([^/]+)/([^/]+)$ restApi.php?module=$1&action=$2 [L,QSA]
-# Match one segment: /rest/api/{api}
 RewriteRule ^rest/api/([^/]+)$ restApi.php?api=$1 [L,QSA]
+
+# Rewrite all requests to index.php while preserving the path
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)$ index.php?module=$1&action=$2&id=$3 [L,QSA]
+RewriteRule ^([^/]+)/([^/]+)$ index.php?module=$1&action=$2 [L,QSA]
+RewriteRule ^([^/]+)$ index.php?page=$1 [L,QSA]
 
 
 # Redirect everything to index.php while preserving query strings
-ErrorDocument 404 /404.html
-ErrorDocument 500 /500.html
+ErrorDocument 404 /404
+ErrorDocument 500 /500
 
 # Enable GZIP Compression for specific file types
 <IfModule mod_deflate.c>

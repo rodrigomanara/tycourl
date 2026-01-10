@@ -1,0 +1,143 @@
+{% extends 'template.html.twig' %}
+
+{% block navigation %}
+    {% include 'navigation.logged.twig' %}
+{% endblock navigation %}
+
+{% block content %}
+    <!-- Home/Landing Page -->
+    <div id="homePage">
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-br from-blue-50 via-white to-orange-50 py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Short Link
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Original URL
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                QR Code
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Created
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="list-table-recents"></tbody>
+                    </table>
+                </div>
+
+                <div class="px-6 py-4 border-t border-gray-200 flex justify-between items-center"
+                     id="pagination-recents">
+                </div>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    <script>
+        let utils = new Utils();
+        utils.isLoggedOut();
+        (function () {
+            let user = new User();
+
+            let user_id = user.getId();
+            let token = user.getToken();
+            const urlParams = new URLSearchParams(window.location.search);
+            const params = Object.fromEntries(urlParams.entries());
+            let offset = params.offset ?? 0;
+
+            mostRecents(user_id, token);
+
+            /**
+             *
+             * @param user_id
+             * @param token
+             */
+            function mostRecents(user_id, token) {
+                let restUrl = `/rest/api/hash/history/QrCode?user_id=${user_id}&offset=${offset}`;
+                fetch(restUrl, {
+                    headers: {
+                        'content-type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }, method: 'GET'
+                }).then(response => response.json()).then(data => {
+                    if (data.response.success) {
+                        buildList(data.response.data);
+                    }
+                }).catch(error => {
+                    //logout();
+                });
+            }
+
+            /**
+             *
+             * @param data
+             */
+            function buildList(data) {
+                let table = document.getElementById('list-table-recents');
+
+                let rows = []
+                for (const key in data) {
+                    // Check if the key is a number (to skip 'total')
+                    if (!isNaN(key)) {
+                        rows.push(data[key]);
+                    }
+                }
+
+                rows.forEach(element => {
+                    let url = `${window.location.origin}/${element.hash}`;
+                    table.innerHTML += `<tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-500 rounded flex items-center justify-center text-white text-xs font-bold mr-3">
+                                            SL
+                                        </div>
+                                        <span class="text-sm font-medium text-blue-600">
+                                            <a href="${url}" target="_blank">${url}</a>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm text-gray-900 truncate max-w-xs block">${element.url}</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm text-gray-900 truncate max-w-xs block"><img src=${element.qr_code}></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${element.date_create}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                     <a href="#" onclick="ask('/hashing/delete/${element.id}' , '${element.hash}');" class="text-red-600 hover:text-red-900">Delete</a>
+                               </td>
+                            </tr>
+              `
+                });
+
+                let total = data.total;
+                let start = data.offset;
+                let end = parseInt(start) + parseInt(data.limit) > total ? total : parseInt(start) + parseInt(data.limit);
+
+                let totalPages = Math.round(data.total / data.limit);
+                let previous = offset - 1 < 0 ? 0 : offset - 1 ?? 0;
+                let next = parseInt(offset) + 1 > totalPages ? totalPages : parseInt(offset) + 1;
+
+                let pagination = document.getElementById('pagination-recents');
+
+                let navButton = '';
+                pagination.innerHTML = `<p class="text-sm text-gray-600">Showing ${start} to ${end} of ${total} links</p>`;
+                navButton += `<a class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50" href="?offset=${previous}">Previous</a>`;
+                navButton += `<a class="px-3 py-1 border border-gray-300 rounded text-sm disabled" >...</a>`;
+                navButton += `<a class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50" href="?offset=${next}">Next</a>`;
+                pagination.innerHTML += `<div class="flex space-x-2">${navButton}</div>`;
+            }
+        })(User);
+    </script>
+{% endblock %}

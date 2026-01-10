@@ -11,14 +11,14 @@ class Domain
 
     private string $domain;
 
-    public function __construct(string $domain ,  $user)
+    public function __construct(string $domain, $user)
     {
-        if($this->isValid($domain))
+        if ($this->isValid($domain))
             throw new \InvalidArgumentException("Invalid Domain Name");
 
         //only check if domain is duplication if user is not logged in
-        if(!$user->isLogged())
-            if($this->isDuplicate($domain))
+        if (!$user->isLogged())
+            if ($this->isDuplicate($domain))
                 throw new \DomainException("Domain is already in!, Sorry create an account");
 
     }
@@ -30,17 +30,22 @@ class Domain
     private function isValid(string $domain): bool
     {
 
-        if(!preg_match("/http|https/" , $domain))
+        if (!preg_match("/http|https/", $domain))
             return false;
 
         return true;
 
     }
 
+    /**
+     * @param string $domain
+     * @return bool
+     */
 
-    private function isDuplicate(string $domain){
+    private function isDuplicate(string $domain)
+    {
         $domain = (new URL())->findDomain($domain);
-        if($domain)
+        if ($domain)
             return true;
 
         return false;

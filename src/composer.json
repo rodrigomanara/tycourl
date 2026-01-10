@@ -1,12 +1,18 @@
 {
     "name": "codediesel/ticourl",
     "require": {
-        "symfony/console": "^7.2",
-        "web-token/jwt-framework": "@stable",
-        "symfony/serializer": "^7.2",
-        "symfony/yaml": "^7.2",
-        "twig/twig": "^3.20",
-        "symfony/dotenv": "^7.2"
+        "php": "^8.1",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-simplexml": "*",
+        "ext-xmlwriter": "*",
+        "ext-zip": "*",
+        "swagger-api/swagger-ui": "^5.21",
+        "guzzlehttp/guzzle": "^7.9",
+        "twig/twig": "^3.0",
+        "phpmailer/phpmailer": "*"
     },
     "autoload": {
         "psr-4": {
@@ -15,7 +21,8 @@
             "Codediesel\\Model\\": "Model/",
             "Codediesel\\Pages\\": "Pages/",
             "Codediesel\\RestApi\\": "RestApi/",
-            "Codediesel\\Exception\\": "Exception/"
+            "Codediesel\\Exception\\": "Exception/",
+            "Codediesel\\Type\\": "Type/"
         }
     },
     "authors": [
@@ -23,5 +30,21 @@
             "name": "codediesel",
             "email": "rodrigomanara@yahoo.co.uk"
         }
-    ]
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^12.0",
+        "symfony/console": "^7.2",
+        "web-token/jwt-framework": "@stable",
+        "symfony/serializer": "^7.2",
+        "symfony/yaml": "^7.2",
+        "symfony/dotenv": "^7.2",
+        "phpdocumentor/shim": "^3.7",
+        "zircote/swagger-php": "^5.1",
+        "doctrine/annotations": "^2.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpdocumentor/shim": true
+        }
+    }
 }

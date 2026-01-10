@@ -1,0 +1,87 @@
+<!-- Charts and Activity -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Analytics Chart -->
+    <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-gray-900">Click Analytics</h3>
+            <select class="text-sm border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500">
+                <option>Last 7 days</option>
+                <option>Last 30 days</option>
+                <option>Last 3 months</option>
+            </select>
+        </div>
+        <canvas id="clicksChart" height="80"></canvas>
+    </div>
+
+    <!-- Top Performing Links -->
+    <div class="bg-white rounded-xl shadow-lg p-6" id="top_5_performance">
+        <h3 class="text-xl font-bold text-gray-900 mb-6">Top Performers</h3>
+        <div class="space-y-4">
+
+            <div class="flex items-center space-x-3">
+                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-lg flex items-center justify-center text-white font-bold">
+                    1
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-gray-900 truncate">short.ly/promo24</p>
+                    <p class="text-xs text-gray-500">8,432 clicks</p>
+                </div>
+                <div class="flex-shrink-0">
+                    <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">+42%</span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-gray-300 to-gray-400 rounded-lg flex items-center justify-center text-white font-bold">
+                    2
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-gray-900 truncate">short.ly/spring</p>
+                    <p class="text-xs text-gray-500">6,128 clicks</p>
+                </div>
+                <div class="flex-shrink-0">
+                    <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">+28%</span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-orange-300 to-orange-400 rounded-lg flex items-center justify-center text-white font-bold">
+                    3
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-gray-900 truncate">short.ly/deals</p>
+                    <p class="text-xs text-gray-500">4,892 clicks</p>
+                </div>
+                <div class="flex-shrink-0">
+                    <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">+15%</span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <div class="flex-shrink-0 w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 font-bold">
+                    4
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-gray-900 truncate">short.ly/news</p>
+                    <p class="text-xs text-gray-500">3,451 clicks</p>
+                </div>
+                <div class="flex-shrink-0">
+                    <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">+8%</span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <div class="flex-shrink-0 w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 font-bold">
+                    5
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-gray-900 truncate">short.ly/events</p>
+                    <p class="text-xs text-gray-500">2,918 clicks</p>
+                </div>
+                <div class="flex-shrink-0">
+                    <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">-3%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -31,6 +31,13 @@ interface RestApiInterface
      * @return array
      */
     public function update(array $data): array;
+    
+    /**
+     * @method GET
+     * @param array $data
+     * @return array
+     */
+    public function history(array $data): array;
 
     /**
      * @return bool

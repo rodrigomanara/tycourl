@@ -1,0 +1,115 @@
+<!-- Stats Cards -->
+<div class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" id="totalStats">
+    <!-- Card 1 -->
+    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition">
+        <div class="flex justify-between items-start mb-4">
+            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                </svg>
+            </div>
+            <span class="text-xs bg-white bg-opacity-20 px-2 py-1 rounded-full">+$upTotal_links%</span>
+        </div>
+        <p class="text-sm opacity-90 mb-1">Total Links</p>
+        <p class="text-3xl font-bold">$total_links</p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition">
+        <div class="flex justify-between items-start mb-4">
+            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+            </div>
+            <span class="text-xs bg-white bg-opacity-20 px-2 py-1 rounded-full">+$upTotal_clicks%</span>
+        </div>
+        <p class="text-sm opacity-90 mb-1">Total Clicks</p>
+        <p class="text-3xl font-bold">$total_clicks</p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition">
+        <div class="flex justify-between items-start mb-4">
+            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+                </svg>
+            </div>
+            <span class="text-xs bg-white bg-opacity-20 px-2 py-1 rounded-full">+$upTotal_qr_codes%</span>
+        </div>
+        <p class="text-sm opacity-90 mb-1">QR Codes</p>
+        <p class="text-3xl font-bold">$total_qr_codes</p>
+    </div>
+
+</div>
+
+<script>
+    //total's
+    (function () {
+        let user = null;
+
+        var loop = setInterval(function () {
+            if (User !== undefined) {
+                 user = new User();
+                init();
+                document.getElementById('totalStats').classList.remove('hidden');
+                clearInterval(loop);
+            }
+        }, 500)
+
+
+        function init() {
+            let user_id = user.getId();
+            let token = user.getToken();
+
+            function setTotalMessage(data) {
+                let totalStats = document.querySelector('#totalStats')
+
+                let list =
+                    {
+                        '$total_links': 'total_links',
+                        '$total_clicks': 'total_clicks',
+                        '$total_qr_codes': 'total_qr_codes',
+                        //
+                        '$upTotal_links': 'upTotal_links',
+                        '$upTotal_clicks': 'upTotal_clicks',
+                        '$upTotal_qr_codes': 'upTotal_qr_codes',
+
+                    };
+
+                Object.entries(list).forEach(([key, value]) => {
+                    totalStats.innerHTML = totalStats.innerHTML.replace(key, data[value]);
+                });
+            }
+
+            //let's fetch data from urls
+            fetch(`/rest/api/dashboard/retrieve/total`, {
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }, method: 'POST',
+                body: JSON.stringify({
+                    user_id: user_id,
+                    start_date: new Date(),
+                    end_date: new Date(),
+
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.response.success === false) user.logout();
+                    setTotalMessage(data.response.data);
+                    setTotalMessage(data.response.data);
+                })
+                .catch(error => {
+                    //logout();
+                });
+        }
+    })();
+</script>

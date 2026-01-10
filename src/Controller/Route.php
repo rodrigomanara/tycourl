@@ -2,7 +2,6 @@
 
 namespace Codediesel\Controller;
 
-use Codediesel\Model\Factory\URL;
 use Codediesel\Library\Request;
 
 class Route
@@ -17,7 +16,7 @@ class Route
      */
     public function __construct()
     {
-       $this->request = new Request();
+        $this->request = new Request();
     }
 
     /**
@@ -31,6 +30,11 @@ class Route
         return $this->request->request()[$key] ?? null;
     }
 
+    public function getUserSessionID()
+    {
+        return $this->request->session()['user_id'] ?? null;
+    }
+
     /**
      * Get all request parameters
      *
@@ -40,15 +44,35 @@ class Route
      */
     public function getAll(): array
     {
+        $request = [];
         if ($this->request->get()) {
-            return $this->request->get();
+            $request[] = $this->request->get();
         }
 
         if ($this->request->request()) {
-            return $this->request->request();
+            $request[] = $this->request->request();
+        }
+        if ($this->request->post()) {
+            $request[] = $this->request->post();
         }
 
-        return [];
+        if ($this->request->input()) {
+            $request[] = json_decode($this->request->input(), true);
+        }
+
+        if($this->request->session())
+            $request[] = $this->request->session();
+
+
+        $combine = [];
+        foreach ($request as $key => $value) {
+            if (is_array($value)) {
+                $combine = array_merge($combine, $value);
+            }
+        }
+
+        return $combine;
+
     }
 
     /**
@@ -80,12 +104,23 @@ class Route
         if ($this->request->input()) {
             return json_decode($this->request->input(), true);
         }
-        
-
         return null;
     }
 
-    public function set(string $key , mixed $value){
+    public function set(string $key, mixed $value)
+    {
         $_REQUEST[$key] = $value;
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function isMatch(string $key): bool
+    {
+
+        //extract everything after  ?
+        $requestUri = explode('?', $_SERVER['REQUEST_URI']);
+        return current($requestUri) == $key ?? false;
     }
 }

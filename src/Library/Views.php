@@ -13,14 +13,14 @@ class Views
 
     public function __construct()
     {
+
+        $files1 = glob(__DIR__ . '/../Pages/Templates');//templates
         $files = glob(__DIR__ . '/../Pages/*/views');
-        $files1 = glob(__DIR__ . '/../Pages/Views');
+        $files2 = glob(__DIR__ . '/../Pages/*/*/views');
 
-        $combine = array_merge($files, $files1);
-
+        $combine = array_merge($files, $files1 , $files2);
         $loader = new FilesystemLoader($combine);
         $twig = new Environment($loader);
-
         $this->twig = $twig;
     }
 
@@ -36,6 +36,11 @@ class Views
     {
         print($this->twig->render($path, $args));
         exit;
+    }
+
+    public function parsed(string $path, array $args):string
+    {
+        return $this->twig->render($path, $args);
     }
 
 }

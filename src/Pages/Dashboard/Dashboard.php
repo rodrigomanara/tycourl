@@ -7,18 +7,12 @@ use Codediesel\Pages\Page;
 class Dashboard extends Page
 {
 
-    /**
-     * @return void
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
+    const URL = '/dashboard';
     public function init(): void
     {
-        $this->views->render(
-            'dashboard.html.twig', [
-                'title' => "Home"
-            ]
-        );
+        //request data
+        $this->render('dashboard.twig', [
+            'title' => 'Dashboard'
+        ]);
     }
 }

@@ -8,6 +8,7 @@ class Request
     private array $post;
     private array $get;
     private string $input;
+    private array $session;
 
     /**
      * Constructor
@@ -20,6 +21,7 @@ class Request
         $this->get = $_GET;
         $this->post = $_POST;
         $this->input = file_get_contents("php://input");
+        $this->session = $_SESSION ?? [];
     }
 
     /**
@@ -60,6 +62,14 @@ class Request
     public function input(): false|string
     {
         return $this->input;
+    }
+
+    /**
+     * @return array
+     */
+    public function session(): array
+    {
+        return $this->session;
     }
 
 }

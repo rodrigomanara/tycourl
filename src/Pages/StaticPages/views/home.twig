@@ -1,0 +1,153 @@
+{%  extends 'template.html.twig' %}
+
+
+{%  block content %}
+    <!-- Hero Section -->
+    <section class="py-20 px-4 min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800">
+        <div class="max-w-7xl mx-auto text-center text-white">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-6 drop-shadow-lg">
+                Build stronger digital connections
+            </h1>
+            <p class="text-xl md:text-2xl mb-4 opacity-95">
+                The complete link management platform
+            </p>
+            <div class="text-lg mb-12 opacity-90">
+                <span class="inline-block mx-4 my-2">✓ Free Service</span>
+                <span class="inline-block mx-4 my-2">✓ QR Code Generator</span>
+                <span class="inline-block mx-4 my-2">✓ Advanced Analytics</span>
+            </div>
+
+            <!-- Illustration Card -->
+            <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 max-w-5xl mx-auto fade-in-up">
+                <div class="flex flex-col lg:flex-row items-center justify-center gap-8 mb-10">
+                    <!-- Long URL Box -->
+                    <div class="flex-1 w-full min-w-[280px] bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 rounded-xl p-6 hover:-translate-y-1 transition-transform">
+                        <div class="text-xs font-bold uppercase tracking-wider text-gray-600 mb-3">
+                            Long URL
+                        </div>
+                        <div class="bg-white rounded-lg p-3 mb-3 font-mono text-sm text-gray-800 break-all leading-relaxed">
+                            https://example.com/blog/article/2024/how-to-build-stronger-digital-connections-with-short-links
+                        </div>
+                        <div class="text-xs font-semibold text-gray-500">
+                            89 characters
+                        </div>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="flex-shrink-0 pulse-animation">
+                        <svg class="w-14 h-14 lg:rotate-0 rotate-90" viewBox="0 0 60 60">
+                            <path d="M10 30 L45 30 M35 20 L45 30 L35 40" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+
+                    <!-- Short URL Box -->
+                    <div class="flex-1 w-full min-w-[280px] bg-gradient-to-br from-blue-50 to-sky-100 border-2 border-blue-200 rounded-xl p-6 hover:-translate-y-1 transition-transform">
+                        <div class="text-xs font-bold uppercase tracking-wider text-gray-600 mb-3">
+                            Short URL
+                        </div>
+                        <div class="bg-white rounded-lg p-3 mb-3 font-mono text-lg font-semibold text-purple-600 break-all">
+                            <span id="url"></span>/a8f3x2
+                        </div>
+                        <div class="text-xs font-semibold text-gray-500 mb-3">
+                            22 characters
+                        </div>
+                        <div class="inline-flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-full font-bold">
+                            <span class="text-lg">#</span>
+                            <span class="font-mono text-sm">a8f3x2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="text-center">
+                    <a href="/sign-up" class="inline-block px-12 py-4 text-xl font-bold bg-purple-600 text-white rounded-lg hover:bg-purple-700 hover:scale-105 hover:shadow-xl transition">
+                        Start Shortening - It's Free!
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="py-20 px-4 bg-white/10 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-center text-white mb-12">
+                Everything you need, completely free
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Benefit 1 -->
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:-translate-y-2 transition-transform">
+                    <div class="text-5xl mb-5">🔗</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Unlimited Short Links</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Create as many shortened URLs as you need. No limits, no restrictions, no hidden fees. Perfect for businesses, marketers, and individuals.
+                    </p>
+                </div>
+
+                <!-- Benefit 2 -->
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:-translate-y-2 transition-transform">
+                    <div class="text-5xl mb-5">📱</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Instant QR Codes</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Every short link comes with a custom QR code. Perfect for print materials, packaging, and contactless sharing. Download in high resolution.
+                    </p>
+                </div>
+
+                <!-- Benefit 3 -->
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:-translate-y-2 transition-transform">
+                    <div class="text-5xl mb-5">📊</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Analytics</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Track clicks, geographic locations, devices, and referral sources. Understand your audience with detailed insights and performance metrics.
+                    </p>
+                </div>
+
+                <!-- Benefit 4 -->
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:-translate-y-2 transition-transform">
+                    <div class="text-5xl mb-5">⚡</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Lightning Fast</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Our global CDN ensures your links load instantly anywhere in the world. 99.9% uptime guaranteed for reliable performance.
+                    </p>
+                </div>
+
+
+                <!-- Benefit 6 -->
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:-translate-y-2 transition-transform">
+                    <div class="text-5xl mb-5">🔒</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Secure & Reliable</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Enterprise-grade security with SSL encryption. Your links and data are protected with industry-leading security protocols.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-4 text-center text-white">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-6">
+                Start shortening links today
+            </h2>
+            <p class="text-xl mb-8 opacity-90">
+                Join thousands of users who trust ShortLink for their URL management
+            </p>
+            <a href="#" class="inline-block px-12 py-5 text-xl font-bold bg-white text-purple-600 rounded-full hover:scale-105 hover:shadow-2xl transition">
+                Get Started - It's Free!
+            </a>
+        </div>
+    </section>
+ {% endblock %}
+
+{% block scripts %}
+<script src="./javascript/utils.js"></script>
+<script>
+    let utils = new Utils();
+    //if logged it it will redirect to the dashboard
+    utils.isLoggedIn();
+    //test
+    document.getElementById('url')
+    .innerHTML = window.location.origin;
+</script>
+{% endblock  %}

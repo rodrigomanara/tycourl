@@ -25,6 +25,12 @@ class DataWithHeaderFormatting
         $this->dataFormating(['errorMessage' => $data, 'success' => false]);
     }
 
+    public function notMethod(array $data): void
+    {
+        header("HTTP/1.1 408 Method not Authorise"); // Set the 404 status
+        $this->dataFormating(['errorMessage' => $data, 'success' => false]);
+    }
+
     /**
      * @param array $data
      * @return void
@@ -32,6 +38,12 @@ class DataWithHeaderFormatting
     public function notFound(array $data): void
     {
         header("HTTP/1.1 404 Not Found"); // Set the 404 status
+        $this->dataFormating(['errorMessage' => $data, 'success' => false]);
+    }
+
+    public function notData(array $data): void
+    {
+        header("HTTP/1.1 503 Not Found"); // Set the 404 status
         $this->dataFormating(['errorMessage' => $data, 'success' => false]);
     }
 

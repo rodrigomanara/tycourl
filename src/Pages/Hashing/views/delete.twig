@@ -1,0 +1,55 @@
+{% extends 'template.html.twig' %}
+
+{% block navigation %}
+    {% include 'navigation.logged.twig' %}
+{% endblock navigation %}
+
+{% block content %}
+    <!-- Home/Landing Page -->
+    <div id="homePage">
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-br from-blue-50 via-white to-orange-50 py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            </div>
+        </section>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        let utils = new Utils();
+        utils.isLoggedOut();
+
+        (function () {
+
+            let user = new User();
+
+            let user_id = user.getId();
+            let token = user.getToken();
+
+
+            let restUrl = `/rest/api/hash/delete`;
+            fetch(restUrl, {
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    user_id: user_id,
+                    page_id : '{{ id }}',
+                    hash: '{{ hash }}',
+                }),
+                method: 'DELETE'
+            }).then(response => response.json()).then(data => {
+                if (data.response.success) {
+                    window.location.assign('{{ url_origin }}');
+                }
+            }).catch(error => {
+                //logout();
+            });
+
+        })();
+    </script>
+{% endblock %}

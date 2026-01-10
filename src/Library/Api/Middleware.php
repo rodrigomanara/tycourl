@@ -12,16 +12,16 @@ use Codediesel\Library\Api\TokenFactory\Authorisation;
 class Middleware
 {
     // The type of operation being performed
-    private string $type;  
-
+    private array $options;  
     /**
-     * Constructor to initialize the Middleware with the operation type.
+     * Constructor
      *
-     * @param string $type The type of operation being performed.
+     * @param array $options The options for the middleware.
      */
-    public function __construct(string $type)
+    public function __construct(array $options)
     {
-            $this->type = $type;
+            $this->options = $options;
+            $this->getUserId();
     }
     /**
      * Initialize the authentication object.
@@ -42,16 +42,14 @@ class Middleware
  }
 
     /**
-     * Checks if the user is authorised to perform the operation.
+     * Placeholder method to check if the user is authenticated.
      *
-     * @return bool True if the user is authorised, false otherwise.
+     * @return bool Always returns true (to be implemented with actual logic).
      */
-    public function isAuthorise(): bool
+    public function isAuthenticate(): bool
     {
-   // Retrieve payload data from the authentication handler
-        $data = $this->authenticate()->handler()->getPayload();
-        // Check if the user has the correct permission to perform the operation
-        return $this->authorisation()->isAllowed($this->type);
+        // Check if the user is authenticated
+        return $this->authenticate()->isValidToken();
     }
 
     /**
@@ -59,11 +57,21 @@ class Middleware
      *
      * @return bool Always returns true (to be implemented with actual logic).
      */
-    public function isUserAllowed(RestApiInterface $class , array $role): bool
+    public function isUserAllowed(RestApiInterface $class): bool
     {
-        
-        $data = $this->authenticate()->handler()->getPayload();
-        return true;
-        //return $class->isAuthorise('admin');
+        return $this->authorisation()->isAllowed($this->options['action']);
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getUserId():?string
+    {
+        $parsed = $this->authorisation()->parsedToken();
+        if(isset($parsed['user_id'])){
+            $_SESSION['user_id'] = $parsed['user_id'];
+            return $parsed['user_id'];
+        }
+        return null;
     }
 }
