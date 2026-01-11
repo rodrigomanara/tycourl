@@ -42,6 +42,9 @@
         "zircote/swagger-php": "^5.1",
         "doctrine/annotations": "^2.0"
     },
+    "scripts": {
+        "test": "phpunit --configuration phpunit.xml.dist"
+    },
     "config": {
         "allow-plugins": {
             "phpdocumentor/shim": true
